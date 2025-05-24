@@ -1,6 +1,6 @@
 #!/bin/bash
 
-SG_ID="sg-0d91531613c3e6618"
+SG_ID="sg-0a1ef4b2b302484d0"
 
 # Allow HTTP (port 80)
 aws ec2 authorize-security-group-ingress \
