@@ -115,4 +115,10 @@ Ensure your security group allows inbound traffic:
 * SSH into the instance.
 * `curl google.com` to verify internet access.
 
+## Delete 
+```
+delete ec2 instance 
+detach internet gateway | delete internet gateway 
+delete vpc (automatically deleted subnet, route table)
+```
 ---
