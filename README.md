@@ -97,8 +97,12 @@ aws ec2 run-instances \
 ```
 ---
 
-## 🔐 **Security Group Setup:**
-
+## Note Down Security Group then run following script 🔐 **Security Group Setup:**
+```
+nano add-sg-rules.sh
+chmod +x add-sg-rules.sh
+./add-sg-rules.sh
+```
 Ensure your security group allows inbound traffic:
 
 * **SSH** (port 22) from your IP
