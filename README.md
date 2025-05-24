@@ -99,8 +99,11 @@ aws ec2 run-instances \
 
 ## Note Down Security Group then run following script 🔐 **Security Group Setup:**
 ```
-nano add-sg-rules.sh
+git clone https://github.com/atulkamble/AWS-Internet-Gateway-Project.git
+cd AWS-Internet-Gateway-Project
 chmod +x add-sg-rules.sh
+sudo sh add-sg-rules.sh
+OR
 ./add-sg-rules.sh
 ```
 Ensure your security group allows inbound traffic:
