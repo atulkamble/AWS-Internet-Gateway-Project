@@ -26,13 +26,18 @@ To create a custom VPC with an Internet Gateway and launch an EC2 instance that 
 ### 1️⃣ Create a VPC
 
 ```bash
+aws ec2 create-default-vpc
 aws ec2 create-vpc --cidr-block 10.0.0.0/16
+aws ec2 create-vpc \
+  --cidr-block 10.0.0.0/16 \
+  --tag-specifications 'ResourceType=vpc,Tags=[{Key=Name,Value=myvpc}]'
+aws ec2 delete-vpc --vpc-id vpc-0b39f70cdf4afc638
 ```
 
 ### 2️⃣ Create a Public Subnet
 
 ```bash
-aws ec2 create-subnet --vpc-id <vpc-id> --cidr-block 10.0.1.0/24
+aws ec2 create-subnet --vpc-id vpc-0170bc4d060213ea2 --cidr-block 10.0.1.0/24
 ```
 
 ### 3️⃣ Create an Internet Gateway
@@ -44,46 +49,52 @@ aws ec2 create-internet-gateway
 ### 4️⃣ Attach the Internet Gateway to the VPC
 
 ```bash
-aws ec2 attach-internet-gateway --internet-gateway-id <igw-id> --vpc-id <vpc-id>
+aws ec2 attach-internet-gateway --internet-gateway-id igw-03eaa26f4fe5bdb45 --vpc-id vpc-0170bc4d060213ea2
 ```
 
 ### 5️⃣ Create a Route Table
 
 ```bash
-aws ec2 create-route-table --vpc-id <vpc-id>
+aws ec2 create-route-table --vpc-id vpc-0170bc4d060213ea2
 ```
 
 ### 6️⃣ Create a Route to the Internet
 
 ```bash
-aws ec2 create-route --route-table-id <rtb-id> --destination-cidr-block 0.0.0.0/0 --gateway-id <igw-id>
+aws ec2 create-route --route-table-id rtb-0afda24b8d3dd7e36 --destination-cidr-block 0.0.0.0/0 --gateway-id igw-03eaa26f4fe5bdb45
 ```
 
 ### 7️⃣ Associate Route Table with Subnet
 
 ```bash
-aws ec2 associate-route-table --subnet-id <subnet-id> --route-table-id <rtb-id>
+aws ec2 associate-route-table --subnet-id subnet-0e677c82616ee740e --route-table-id rtb-0afda24b8d3dd7e36
 ```
 
 ### 8️⃣ Modify Subnet to Enable Auto-assign Public IP
 
 ```bash
-aws ec2 modify-subnet-attribute --subnet-id <subnet-id> --map-public-ip-on-launch
+aws ec2 modify-subnet-attribute --subnet-id subnet-0e677c82616ee740e --map-public-ip-on-launch
 ```
-
+### Create mykey.pem
+```
+aws ec2 create-key-pair \
+  --key-name mykey \
+  --query 'KeyMaterial' \
+  --output text > mykey.pem
+```
 ### 9️⃣ Launch EC2 Instance in the Subnet
 
-```bash
-aws ec2 run-instances \
-  --image-id ami-0abcdef1234567890 \
-  --count 1 \
-  --instance-type t2.micro \
-  --key-name my-key \
-  --security-group-ids <sg-id> \
-  --subnet-id <subnet-id> \
-  --associate-public-ip-address
 ```
-
+aws ec2 run-instances \
+  --image-id ami-0953476d60561c955 \
+  --count 1 \
+  --instance-type t3.micro \
+  --key-name mykey \
+  --security-group-ids sg-0d91531613c3e6618 \
+  --subnet-id subnet-0e677c82616ee740e \
+  --associate-public-ip-address \
+  --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=MyEC2Instance}]'
+```
 ---
 
 ## 🔐 **Security Group Setup:**
@@ -101,5 +112,3 @@ Ensure your security group allows inbound traffic:
 * `curl google.com` to verify internet access.
 
 ---
-
-If you'd like this as a **Terraform project**, a **CloudFormation template**, or a **detailed lab guide with screenshots**, just let me know!
