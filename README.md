@@ -124,4 +124,16 @@ delete ec2 instance
 detach internet gateway | delete internet gateway 
 delete vpc (automatically deleted subnet, route table)
 ```
+## AWS Cloudformation Template 
+---
+
+### 🚀 **How to Deploy**
+
+```bash
+aws cloudformation create-stack \
+  --stack-name InternetGatewayProject \
+  --template-body file://internet-gateway-setup.yaml \
+  --parameters ParameterKey=KeyName,ParameterValue=mykey \
+  --capabilities CAPABILITY_NAMED_IAM
+```
 ---
